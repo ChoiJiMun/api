@@ -27,7 +27,11 @@ export default function Header(){
   const menus = [
     { title: '서비스 소개', path: '/service', sub: [] },
     { title: '다운로드', path: '/download', sub: ['최신 다운로드', '다운로드 목록'] },
-    { title: '고객지원', path: '#', sub: ['Q&A', '게시판', '공지사항'] },
+    { title: '고객지원', path: '#', sub: [
+      { title: 'Q&A', path: '/qa' },
+      { title: '게시판', path: '#' },
+      { title: '공지사항', path: '#' }
+    ] },
     { title: '마이페이지', path: '#', sub: ['내 정보 수정'] },
   ]
 
@@ -53,11 +57,18 @@ export default function Header(){
               }}>{menu.title}</a>
               {menu.sub.length > 0 && hoveredMenu === index && (
                 <div className="submenu">
-                  {menu.sub.map((item, subIndex) => (
-                    <a key={subIndex} href="#" onClick={(e) => {
-                      e.preventDefault();
-                    }}>{item}</a>
-                  ))}
+                  {menu.sub.map((item, subIndex) => {
+                    const itemPath = typeof item === 'string' ? '#' : item.path
+                    const itemTitle = typeof item === 'string' ? item : item.title
+                    return (
+                      <a key={subIndex} href={itemPath} onClick={(e) => {
+                        e.preventDefault();
+                        if (itemPath !== '#') {
+                          navigate(itemPath);
+                        }
+                      }}>{itemTitle}</a>
+                    )
+                  })}
                 </div>
               )}
             </div>
@@ -94,15 +105,23 @@ export default function Header(){
                 </div>
                 {menu.sub.length > 0 && expandedMobile === index && (
                   <div className="mobile-submenu">
-                    {menu.sub.map((item, subIndex) => (
-                      <a 
-                        key={subIndex} 
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                        }}
-                      >{item}</a>
-                    ))}
+                    {menu.sub.map((item, subIndex) => {
+                      const itemPath = typeof item === 'string' ? '#' : item.path
+                      const itemTitle = typeof item === 'string' ? item : item.title
+                      return (
+                        <a 
+                          key={subIndex} 
+                          href={itemPath}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            if (itemPath !== '#') {
+                              navigate(itemPath);
+                              setMenuOpen(false);
+                            }
+                          }}
+                        >{itemTitle}</a>
+                      )
+                    })}
                   </div>
                 )}
               </div>
