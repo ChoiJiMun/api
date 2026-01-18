@@ -29,8 +29,8 @@ export default function Header(){
     { title: '다운로드', path: '/download', sub: ['최신 다운로드', '다운로드 목록'] },
     { title: '고객지원', path: '#', sub: [
       { title: 'Q&A', path: '/qa' },
-      { title: '게시판', path: '#' },
-      { title: '공지사항', path: '#' }
+      { title: '게시판', path: '/board' },
+      { title: '공지사항', path: '/notice' }
     ] },
     { title: '마이페이지', path: '#', sub: ['내 정보 수정'] },
   ]
