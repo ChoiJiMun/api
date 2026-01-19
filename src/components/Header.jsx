@@ -26,13 +26,18 @@ export default function Header(){
 
   const menus = [
     { title: '서비스 소개', path: '/service', sub: [] },
-    { title: '다운로드', path: '/download', sub: ['최신 다운로드', '다운로드 목록'] },
-    { title: '고객지원', path: '#', sub: [
+    { title: '다운로드', path: '/download', sub: [
+      { title: '최신 다운로드', path: '/download/latest' },
+      { title: '다운로드 목록', path: '/download' }
+    ] },
+    { title: '고객지원', path: '/qa', sub: [
       { title: 'Q&A', path: '/qa' },
       { title: '게시판', path: '/board' },
       { title: '공지사항', path: '/notice' }
     ] },
-    { title: '마이페이지', path: '#', sub: ['내 정보 수정'] },
+    { title: '마이페이지', path: '/mypage', sub: [
+      { title: '내 정보 수정', path: '/edit-profile' }
+    ] },
   ]
 
   return (
@@ -75,7 +80,7 @@ export default function Header(){
           ))}
         </nav>
         <div className="header-right">
-          <button className="login-btn">로그인</button>
+          <button className="login-btn" onClick={() => navigate('/login')}>로그인</button>
         </div>
         <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)}>
           <span></span>
@@ -84,7 +89,7 @@ export default function Header(){
         </button>
         {menuOpen && (
           <nav className="mobile-menu">
-            <button className="mobile-login-btn">로그인</button>
+            <button className="mobile-login-btn" onClick={() => navigate('/login')}>로그인</button>
             {menus.map((menu, index) => (
               <div key={index} className="mobile-menu-item">
                 <div 

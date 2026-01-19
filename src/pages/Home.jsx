@@ -7,7 +7,7 @@ export default function Home(){
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-content" style={{ textAlign: 'left' }}>
-            <h1>22통신비 절감은 기본!<br></br>업무 효율은 보너스!</h1>
+            <h1>통신비 절감은 기본!<br></br>업무 효율은 보너스!</h1>
             
             <h3><span style={{ color: '#e6007e', fontWeight: 'bold' }}>U+ OPEN API</span>로 비즈니스에 날개를 달다</h3>
             <p>검증된 기술력과 안정된 품질,<br />LG U+와 함께 최적의 업무 환경을 만나보세요.</p>

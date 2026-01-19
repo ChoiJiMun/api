@@ -50,11 +50,60 @@ const initialNoticeData = [
     isPinned: false,
     content: '더 자세한 기술 문서들이 개발자 센터에 추가되었습니다...'
   },
+  {
+    id: 7,
+    title: '클라이언트 라이브러리 업데이트 안내',
+    date: '2023-12-28',
+    views: 523,
+    isPinned: false,
+    content: '새로운 버전의 클라이언트 라이브러리가 릴리스되었습니다. 최신 기능을 확인하세요...'
+  },
+  {
+    id: 8,
+    title: '개발자 커뮤니티 이벤트 개최',
+    date: '2023-12-25',
+    views: 612,
+    isPinned: false,
+    content: '2024년 개발자 커뮤니티 이벤트를 개최합니다. 많은 참가 부탁드립니다...'
+  },
+  {
+    id: 9,
+    title: 'API 성능 최적화 완료',
+    date: '2023-12-20',
+    views: 445,
+    isPinned: false,
+    content: '최근 API 성능을 크게 개선했습니다. 더 빠른 응답 속도를 경험하세요...'
+  },
+  {
+    id: 10,
+    title: '장애 이력 및 조치 사항 공지',
+    date: '2023-12-15',
+    views: 678,
+    isPinned: false,
+    content: '최근 발생한 일시적 장애에 대해 안내드립니다. 조치 사항을 확인하세요...'
+  },
+  {
+    id: 11,
+    title: '새로운 결제 옵션 추가',
+    date: '2023-12-10',
+    views: 734,
+    isPinned: false,
+    content: '더 다양한 결제 방식을 지원하기 시작했습니다...'
+  },
+  {
+    id: 12,
+    title: 'API 문서 완전 개편',
+    date: '2023-12-05',
+    views: 891,
+    isPinned: false,
+    content: 'API 문서가 완전히 개편되었습니다. 더 쉽고 명확한 설명을 참고하세요...'
+  },
 ]
 
 export default function Notice(){
   const [searchQuery, setSearchQuery] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
+  const [selectedItems, setSelectedItems] = useState(new Set())
   const itemsPerPage = 5
 
   const filteredNotice = initialNoticeData.filter(item => {
@@ -68,74 +117,118 @@ export default function Notice(){
   const startIdx = (currentPage - 1) * itemsPerPage
   const paginatedNotice = unpinnedNotices.slice(startIdx, startIdx + itemsPerPage)
 
+  const handleSelectItem = (id) => {
+    const newSelected = new Set(selectedItems)
+    if (newSelected.has(id)) {
+      newSelected.delete(id)
+    } else {
+      newSelected.add(id)
+    }
+    setSelectedItems(newSelected)
+  }
+
+  const handleSelectAll = (notices) => {
+    const newSelected = new Set(selectedItems)
+    const allIds = notices.map(item => item.id)
+    const allSelected = allIds.every(id => newSelected.has(id))
+    
+    if (allSelected) {
+      allIds.forEach(id => newSelected.delete(id))
+    } else {
+      allIds.forEach(id => newSelected.add(id))
+    }
+    setSelectedItems(newSelected)
+  }
+
   return (
     <div className="notice-page">
-      <div className="notice-header-section">
-        <div className="notice-header-content">
+      <div className="page-header-section">
+        <div className="page-header-content">
           <h1>공지사항</h1>
           <p>LG U+ API 서비스 관련 중요한 소식을 확인하세요.</p>
+          <div className="breadcrumb-nav">
+            <a href="/">HOME</a>
+            <a href="/support">고객지원</a>
+            <span>공지사항</span>
+          </div>
         </div>
       </div>
 
       <div className="notice-container">
-        <div className="notice-search">
-          <input 
-            type="text" 
-            placeholder="공지사항 검색..." 
-            value={searchQuery}
-            onChange={(e) => {
-              setSearchQuery(e.target.value)
-              setCurrentPage(1)
-            }}
-          />
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="11" cy="11" r="8"></circle>
-            <path d="m21 21-4.35-4.35"></path>
-          </svg>
-        </div>
-
-        {pinnedNotices.length > 0 && (
-          <div className="notice-pinned-section">
-            <h2>📌 주요 공지</h2>
-            <div className="notice-list">
-              {pinnedNotices.map((item) => (
-                <div key={item.id} className="notice-item notice-item-pinned">
-                  <div className="notice-item-header">
-                    <div className="notice-title-group">
-                      <span className="notice-pinned-badge">📌</span>
-                      <h3>{item.title}</h3>
-                    </div>
-                  </div>
-                  <div className="notice-item-footer">
-                    <span className="notice-date">{item.date}</span>
-                    <span className="notice-views">조회 {item.views}</span>
-                  </div>
-                  <p className="notice-preview">{item.content}</p>
-                </div>
-              ))}
-            </div>
+        <div className="notice-top-controls">
+          <div className="notice-search">
+            <input 
+              type="text" 
+              placeholder="공지사항 검색..." 
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value)
+                setCurrentPage(1)
+              }}
+            />
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path d="m21 21-4.35-4.35"></path>
+            </svg>
           </div>
-        )}
+          <button className="write-btn">글쓰기</button>
+        </div>
 
         {paginatedNotice.length > 0 ? (
           <>
-            <div className="notice-list">
-              {paginatedNotice.map((item) => (
-                <div key={item.id} className="notice-item">
-                  <div className="notice-item-header">
-                    <h3>{item.title}</h3>
-                  </div>
-                  <div className="notice-item-footer">
-                    <span className="notice-date">{item.date}</span>
-                    <span className="notice-views">조회 {item.views}</span>
-                  </div>
-                  <p className="notice-preview">{item.content}</p>
-                </div>
-              ))}
+            <div className="notice-table-wrapper">
+              <table className="notice-table">
+                <thead>
+                  <tr>
+                    <th className="col-checkbox">
+                      <input 
+                        type="checkbox" 
+                        checked={paginatedNotice.length > 0 && paginatedNotice.every(item => selectedItems.has(item.id))}
+                        onChange={() => handleSelectAll(paginatedNotice)}
+                      />
+                    </th>
+                    <th className="col-number">번호</th>
+                    <th className="col-title">제목</th>
+                    <th className="col-author">작성자</th>
+                    <th className="col-date">작성일</th>
+                    <th className="col-views">조회</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedNotice.map((item, index) => (
+                    <tr key={item.id} className="notice-table-row">
+                      <td className="col-checkbox">
+                        <input 
+                          type="checkbox" 
+                          checked={selectedItems.has(item.id)}
+                          onChange={() => handleSelectItem(item.id)}
+                        />
+                      </td>
+                      <td className="col-number">{startIdx + index + 1}</td>
+                      <td className="col-title">{item.title}</td>
+                      <td className="col-author">관리자</td>
+                      <td className="col-date">{item.date}</td>
+                      <td className="col-views">{item.views}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {totalPages > 1 && (
               <div className="notice-pagination">
+                <button 
+                  className="notice-page-btn notice-prev-btn"
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1)
+                      window.scrollTo(0, 0)
+                    }
+                  }}
+                  disabled={currentPage === 1}
+                >
+                  ◀
+                </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <button
                     key={page}
@@ -148,6 +241,18 @@ export default function Notice(){
                     {page}
                   </button>
                 ))}
+                <button 
+                  className="notice-page-btn notice-next-btn"
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      setCurrentPage(currentPage + 1)
+                      window.scrollTo(0, 0)
+                    }
+                  }}
+                  disabled={currentPage === totalPages}
+                >
+                  ▶
+                </button>
               </div>
             )}
           </>

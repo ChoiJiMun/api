@@ -63,8 +63,6 @@ const categories = ['전체', '기술', '기능', '보안', '지원']
 export default function QA(){
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('전체')
-  const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 5
 
   const filteredQA = initialQAData.filter(item => {
     const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase())
@@ -72,16 +70,17 @@ export default function QA(){
     return matchesSearch && matchesCategory
   })
 
-  const totalPages = Math.ceil(filteredQA.length / itemsPerPage)
-  const startIdx = (currentPage - 1) * itemsPerPage
-  const paginatedQA = filteredQA.slice(startIdx, startIdx + itemsPerPage)
-
   return (
     <div className="qa-page">
-      <div className="qa-header-section">
-        <div className="qa-header-content">
+      <div className="page-header-section">
+        <div className="page-header-content">
           <h1>자주 묻는 질문</h1>
           <p>고객들이 자주 묻는 질문과 답변을 통해 빠르게 정보를 얻으세요.</p>
+          <div className="breadcrumb-nav">
+            <a href="/">HOME</a>
+            <a href="/support">고객지원</a>
+            <span>Q&A</span>
+          </div>
         </div>
       </div>
 
@@ -119,10 +118,10 @@ export default function QA(){
           </div>
         </div>
 
-        {paginatedQA.length > 0 ? (
+        {filteredQA.length > 0 ? (
           <>
             <div className="qa-list">
-              {paginatedQA.map((item) => (
+              {filteredQA.map((item) => (
                 <div key={item.id} className="qa-item">
                   <div className="qa-item-header">
                     <div className="qa-item-title-group">
@@ -141,23 +140,6 @@ export default function QA(){
                 </div>
               ))}
             </div>
-
-            {totalPages > 1 && (
-              <div className="qa-pagination">
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                  <button
-                    key={page}
-                    className={`qa-page-btn ${currentPage === page ? 'active' : ''}`}
-                    onClick={() => {
-                      setCurrentPage(page)
-                      window.scrollTo(0, 0)
-                    }}
-                  >
-                    {page}
-                  </button>
-                ))}
-              </div>
-            )}
           </>
         ) : (
           <div className="qa-empty">

@@ -3,6 +3,7 @@ import Footer from '../components/Footer'
 
 export default function Archive() {
   const [currentPage, setCurrentPage] = React.useState(1);
+  const [viewMode, setViewMode] = React.useState('card'); // 'card' or 'list'
   
   const apiCards = [
     {
@@ -73,17 +74,49 @@ export default function Archive() {
   return (
     <>
       <div className="archive-page">
-        <div className="archive-header">
-          <h1>자료실</h1>
+        <div className="page-header-section">
+          <div className="page-header-content">
+            <h1>다운로드</h1>
+            <div className="breadcrumb-nav">
+              <a href="/">HOME</a>
+              <a href="/download">다운로드</a>
+              <span>다운로드 목록</span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="archive-header-controls">
           <div className="archive-controls">
             <input type="text" placeholder="검색" className="search-input" />
-            <select className="filter-select">
-              <option>전체</option>
-            </select>
+            <div className="filter-wrapper">
+              <select className="filter-select">
+                <option>전체</option>
+                <option>API</option>
+                <option>Sample</option>
+                <option>Manual</option>
+              </select>
+            </div>
             <button className="register-btn">등록</button>
+          </div>
+          <div className="view-mode-toggle">
+            <button 
+              className={`view-btn ${viewMode === 'card' ? 'active' : ''}`}
+              onClick={() => setViewMode('card')}
+              title="카드 뷰"
+            >
+              ⊞
+            </button>
+            <button 
+              className={`view-btn ${viewMode === 'list' ? 'active' : ''}`}
+              onClick={() => setViewMode('list')}
+              title="리스트 뷰"
+            >
+              ☰
+            </button>
           </div>
         </div>
 
+        {viewMode === 'card' ? (
         <div className="api-grid">
           {apiCards.map((card) => (
             <div key={card.id} className="api-card">
@@ -108,6 +141,38 @@ export default function Archive() {
             </div>
           ))}
         </div>
+        ) : (
+        <div className="api-list">
+          {apiCards.map((card) => (
+            <div key={card.id} className="api-list-item">
+              <div className="api-list-image">
+                <img src={card.image} alt={card.title} />
+              </div>
+              <div className="api-list-content">
+                <p className="api-list-title">{card.title}</p>
+                <div className="api-list-meta">
+                  <div className="api-list-tags">
+                    {card.category.map((cat, idx) => (
+                      <span key={idx} className={`tag ${idx === 0 ? 'tag-pink' : 'tag-gray'}`}>
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
+                  <div className="api-list-keywords">
+                    {card.tags.map((tag, idx) => (
+                      <span key={idx} className="meta-tag">{tag}</span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              <button className="download-link-btn">
+                <span>다운로드</span>
+                <span>→</span>
+              </button>
+            </div>
+          ))}
+        </div>
+        )}
 
         <div className="pagination">
           <button 

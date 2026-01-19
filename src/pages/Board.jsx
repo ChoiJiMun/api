@@ -84,10 +84,15 @@ export default function Board(){
 
   return (
     <div className="board-page">
-      <div className="board-header-section">
-        <div className="board-header-content">
-          <h1>커뮤니티</h1>
+<div className="page-header-section">
+        <div className="page-header-content">
+          <h1>게시판</h1>
           <p>사용자들이 공유하는 팁, 후기, 제안을 확인하세요.</p>
+          <div className="breadcrumb-nav">
+            <a href="/">HOME</a>
+            <a href="/support">고객지원</a>
+            <span>게시판</span>
+          </div>
         </div>
       </div>
 
@@ -128,29 +133,48 @@ export default function Board(){
 
         {paginatedBoard.length > 0 ? (
           <>
-            <div className="board-list">
-              {paginatedBoard.map((item) => (
-                <div key={item.id} className="board-item">
-                  <div className="board-item-main">
-                    <div className="board-item-left">
-                      <span className="board-category-tag">{item.category}</span>
-                      <h3>{item.title}</h3>
-                    </div>
-                    <div className="board-item-right">
-                      <span className="board-replies">{item.replies}</span>
-                    </div>
-                  </div>
-                  <div className="board-item-footer">
-                    <span className="board-author">{item.author}</span>
-                    <span className="board-date">{item.date}</span>
-                    <span className="board-stat">조회 {item.views}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="board-table-wrapper">
+              <table className="board-table">
+                <thead>
+                  <tr>
+                    <th className="col-number">번호</th>
+                    <th className="col-title">제목</th>
+                    <th className="col-author">작성자</th>
+                    <th className="col-date">작성일</th>
+                    <th className="col-views">조회</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedBoard.map((item, index) => (
+                    <tr key={item.id} className="board-table-row">
+                      <td className="col-number">{startIdx + index + 1}</td>
+                      <td className="col-title">
+                        <span className="board-category-tag">{item.category}</span>
+                        <span className="board-title-text">{item.title}</span>
+                      </td>
+                      <td className="col-author">{item.author}</td>
+                      <td className="col-date">{item.date}</td>
+                      <td className="col-views">{item.views}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
 
             {totalPages > 1 && (
               <div className="board-pagination">
+                <button 
+                  className="board-page-btn board-prev-btn"
+                  onClick={() => {
+                    if (currentPage > 1) {
+                      setCurrentPage(currentPage - 1)
+                      window.scrollTo(0, 0)
+                    }
+                  }}
+                  disabled={currentPage === 1}
+                >
+                  ◀
+                </button>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                   <button
                     key={page}
@@ -163,6 +187,18 @@ export default function Board(){
                     {page}
                   </button>
                 ))}
+                <button 
+                  className="board-page-btn board-next-btn"
+                  onClick={() => {
+                    if (currentPage < totalPages) {
+                      setCurrentPage(currentPage + 1)
+                      window.scrollTo(0, 0)
+                    }
+                  }}
+                  disabled={currentPage === totalPages}
+                >
+                  ▶
+                </button>
               </div>
             )}
           </>
@@ -171,6 +207,7 @@ export default function Board(){
             <p>검색 결과가 없습니다.</p>
           </div>
         )}
+     
       </div>
 
       <Footer />
