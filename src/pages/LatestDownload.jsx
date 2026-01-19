@@ -39,9 +39,9 @@ export default function LatestDownload() {
             <tbody>
               {types.map((type) => (
                 <tr key={type}>
-                  <td className="col-type-label">{type}</td>
+                  <td className="col-type-label" data-label="유형">{type}</td>
                   {categories.map((category) => (
-                    <td key={`${category}-${type}`} className="col-items">
+                    <td key={`${category}-${type}`} className="col-items" data-label={category}>
                       {type === 'PROGRAM' && (
                         <div className="item-group">
                           <div className="item">
@@ -50,7 +50,12 @@ export default function LatestDownload() {
                               className="download-btn download-btn-red"
                               onClick={() => handleDownload(category, type, 'OCX')}
                             >
-                              ↓ DOWNLOAD
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                              </svg>
+                              <span>다운로드</span>
                             </button>
                           </div>
                         </div>
@@ -63,7 +68,12 @@ export default function LatestDownload() {
                               className="download-btn download-btn-red"
                               onClick={() => handleDownload(category, type, 'Web 설정')}
                             >
-                              ↓ DOWNLOAD
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                              </svg>
+                              <span>다운로드</span>
                             </button>
                           </div>
                           <div className="item">
@@ -72,7 +82,12 @@ export default function LatestDownload() {
                               className="download-btn download-btn-red"
                               onClick={() => handleDownload(category, type, 'MFC VC++ 설정')}
                             >
-                              ↓ DOWNLOAD
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                              </svg>
+                              <span>다운로드</span>
                             </button>
                           </div>
                         </div>
@@ -85,7 +100,12 @@ export default function LatestDownload() {
                               className="download-btn download-btn-red"
                               onClick={() => handleDownload(category, type, 'OCX Manual')}
                             >
-                              ↓ DOWNLOAD
+                              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                              </svg>
+                              <span>다운로드</span>
                             </button>
                           </div>
                         </div>
