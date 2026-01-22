@@ -105,7 +105,7 @@ export default function ServiceIntro(){
         <section className="service-hero">
           <div className="service-hero-content">
             <span className="eyebrow">기업070 OPEN API</span>
-            <h1>111통화와 업무를 잇는<br/>하나의 API 플랫폼</h1>
+            <h1>통화와 업무를 잇는<br/>하나의 API 플랫폼</h1>
             <p>
               발신자 정보 표시, Click2Call, 회의통화까지. 기업 전화 인프라와 업무 솔루션을 부드럽게 연결해
               상담 효율과 고객 경험을 동시에 높이세요.

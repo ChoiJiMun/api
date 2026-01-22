@@ -17,6 +17,7 @@ import FindPassword from './pages/FindPassword'
 import Terms from './pages/Terms'
 import PrivacyPolicy from './pages/PrivacyPolicy'
 import EmailProtection from './pages/EmailProtection'
+import EarlyBirdie from './pages/EarlyBirdie'
 
 export default function App(){
   return (
@@ -40,6 +41,7 @@ export default function App(){
           <Route path="/terms" element={<Terms />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/email-protection" element={<EmailProtection />} />
+          <Route path="/earlybirdie" element={<EarlyBirdie />} />
         </Routes>
       </div>
     </BrowserRouter>

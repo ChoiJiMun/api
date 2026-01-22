@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EarlyBirdie - 골프 리더보드</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+      min-height: 100vh;
+      color: #0f172a;
+      padding-bottom: 80px;
+    }
+
+    /* 헤더 */
+    .header {
+      background: linear-gradient(135deg, #2C61FE, #1E40AF);
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+      color: white;
+    }
+
+    .header-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #2C61FE;
+      font-weight: 700;
+    }
+
+    /* 월별 통계 */
+    .monthly-stats {
+      margin: 12px 20px;
+      background: white;
+      border-radius: 16px;
+      padding: 18px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .monthly-stats-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .stat-item {
+      text-align: center;
+      padding: 12px 10px;
+      background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: #64748b;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: #2C61FE;
+    }
+
+    /* 섹션 제목 */
+    .section-title {
+      font-size: 17px;
+      font-weight: 700;
+      margin: 16px 20px 12px;
+      color: #0f172a;
+    }
+
+    /* 리더보드 카드 */
+    .leaderboard-section {
+      margin: 0 20px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .cards-wrapper {
+      display: flex;
+      gap: 14px;
+      padding-bottom: 10px;
+    }
+
+    .leader-card {
+      min-width: 280px;
+      background: white;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+      flex-shrink: 0;
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, #2C61FE 0%, #1E40AF 100%);
+      padding: 30px 20px 50px;
+      color: white;
+      text-align: center;
+      position: relative;
+    }
+
+    .card-title {
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    /* 시상대 */
+    .podium {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      padding: 0 20px 20px;
+      margin-top: -40px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .podium-item {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .podium-avatar {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+      border: 3px solid white;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: #64748b;
+      font-size: 14px;
+    }
+
+    .podium-item.rank-1 .podium-avatar {
+      width: 85px;
+      height: 85px;
+      border-color: #FFD700;
+    }
+
+    .podium-stand {
+      background: white;
+      border-radius: 12px 12px 0 0;
+      padding: 12px 8px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .podium-item.rank-1 .podium-stand {
+      background: linear-gradient(135deg, #FFF9E6, #FFE4B5);
+      border: 2px solid #FFD700;
+    }
+
+    .podium-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+
+    .podium-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2C61FE;
+    }
+
+    /* 랭킹 리스트 */
+    .rank-list {
+      padding: 16px 20px;
+      background: white;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .rank-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #f8fafc;
+      border-radius: 12px;
+      margin-bottom: 8px;
+    }
+
+    .rank-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .rank-number {
+      font-size: 16px;
+      font-weight: 700;
+      color: #94a3b8;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .rank-avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+    }
+
+    .rank-name {
+      flex: 1;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .rank-value {
+      font-size: 16px;
+      font-weight: 700;
+      color: #2C61FE;
+    }
+
+    /* 날씨 위젯 */
+    .weather-container {
+      margin: 12px 20px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .current-weather {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      padding: 20px 16px;
+      color: white;
+      display: flex;
+      gap: 16px;
+    }
+
+    .current-icon {
+      font-size: 48px;
+    }
+
+    .current-info {
+      flex: 1;
+    }
+
+    .current-location {
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    .current-temp {
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .current-desc {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+
+    /* 공지사항 */
+    .announcements-card {
+      margin: 12px 20px;
+      background: white;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .announcements-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    .announcement-item {
+      padding: 12px;
+      border-left: 3px solid #2C61FE;
+      background: #f8fafc;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .announcement-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .announcement-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #0f172a;
+      margin-bottom: 4px;
+    }
+
+    .announcement-date {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    /* 하단 네비게이션 */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 100;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      text-decoration: none;
+      color: #94a3b8;
+      font-size: 11px;
+      padding: 8px 16px;
+      transition: all 0.3s;
+    }
+
+    .nav-item.active {
+      color: #2C61FE;
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .cards-wrapper {
+        gap: 10px;
+      }
+
+      .leader-card {
+        min-width: 250px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-title">⛳ EarlyBirdie</div>
+    <div class="user-avatar">김</div>
+  </div>
+
+  <!-- 월별 통계 -->
+  <div class="monthly-stats">
+    <div class="monthly-stats-title">🎯 2026년 1월 통계</div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-label">라운드</div>
+        <div class="stat-value">5</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">평균</div>
+        <div class="stat-value">82</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">최고</div>
+        <div class="stat-value">78</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-label">최저</div>
+        <div class="stat-value">86</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 전체 리더보드 -->
+  <div class="section-title">🏆 전체 리더보드</div>
+  <div class="leaderboard-section">
+    <div class="cards-wrapper">
+      <div class="leader-card">
+        <div class="card-header">
+          <div class="card-title">라운드 순위</div>
+        </div>
+        <div class="podium">
+          <div class="podium-item rank-2">
+            <div class="podium-avatar">2위</div>
+            <div class="podium-stand">
+              <div class="podium-name">이순신</div>
+              <div class="podium-value">84</div>
+            </div>
+          </div>
+          <div class="podium-item rank-1">
+            <div class="podium-avatar">1위</div>
+            <div class="podium-stand">
+              <div class="podium-name">홍길동</div>
+              <div class="podium-value">76</div>
+            </div>
+          </div>
+          <div class="podium-item rank-3">
+            <div class="podium-avatar">3위</div>
+            <div class="podium-stand">
+              <div class="podium-name">강감찬</div>
+              <div class="podium-value">88</div>
+            </div>
+          </div>
+        </div>
+        <div class="rank-list">
+          <div class="rank-item">
+            <div class="rank-number">4</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">문무왕</div>
+            <div class="rank-value">91</div>
+          </div>
+          <div class="rank-item">
+            <div class="rank-number">5</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">세종대왕</div>
+            <div class="rank-value">93</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="leader-card">
+        <div class="card-header" style="background: linear-gradient(135deg, #10b981, #059669);">
+          <div class="card-title">구장별 평균</div>
+        </div>
+        <div class="rank-list">
+          <div class="rank-item">
+            <div class="rank-number">1</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">한남</div>
+            <div class="rank-value">81.5</div>
+          </div>
+          <div class="rank-item">
+            <div class="rank-number">2</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">밤섬</div>
+            <div class="rank-value">83.2</div>
+          </div>
+          <div class="rank-item">
+            <div class="rank-number">3</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">서울</div>
+            <div class="rank-value">84.8</div>
+          </div>
+          <div class="rank-item">
+            <div class="rank-number">4</div>
+            <div class="rank-avatar"></div>
+            <div class="rank-name">올림픽</div>
+            <div class="rank-value">85.1</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 날씨 -->
+  <div class="section-title">🌤️ 날씨</div>
+  <div class="weather-container">
+    <div class="current-weather">
+      <div class="current-icon">⛅</div>
+      <div class="current-info">
+        <div class="current-location">서울</div>
+        <div class="current-temp">18°C</div>
+        <div class="current-desc">맑음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 공지사항 -->
+  <div class="section-title">📢 공지사항</div>
+  <div class="announcements-card">
+    <div class="announcement-item">
+      <div class="announcement-text">새로운 리더보드 기능 추가됨</div>
+      <div class="announcement-date">2026-01-22</div>
+    </div>
+    <div class="announcement-item">
+      <div class="announcement-text">구장 정보 업데이트 완료</div>
+      <div class="announcement-date">2026-01-20</div>
+    </div>
+    <div class="announcement-item">
+      <div class="announcement-text">앱 버전 2.0 출시</div>
+      <div class="announcement-date">2026-01-15</div>
+    </div>
+  </div>
+
+  <!-- 하단 네비게이션 -->
+  <nav class="bottom-nav">
+    <a href="#" class="nav-item active">
+      <span>📊</span>
+      <span>대시보드</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>🏌️</span>
+      <span>라운드</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>🏆</span>
+      <span>리더보드</span>
+    </a>
+    <a href="#" class="nav-item">
+      <span>👤</span>
+      <span>내정보</span>
+    </a>
+  </nav>
+</body>
+</html>
